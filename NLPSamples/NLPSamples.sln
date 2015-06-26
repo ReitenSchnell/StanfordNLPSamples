@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{D5196D31-2958-4FD8-A1B4-82EA12D66137}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{0CF2E8AF-6883-456E-A0C8-50E9B9970068}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MailParsing", "MailParsing\MailParsing.csproj", "{CA4EB676-4A91-4044-AB1B-07099C66FAC8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D5196D31-2958-4FD8-A1B4-82EA12D66137}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5196D31-2958-4FD8-A1B4-82EA12D66137}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5196D31-2958-4FD8-A1B4-82EA12D66137}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5196D31-2958-4FD8-A1B4-82EA12D66137}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA4EB676-4A91-4044-AB1B-07099C66FAC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA4EB676-4A91-4044-AB1B-07099C66FAC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA4EB676-4A91-4044-AB1B-07099C66FAC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA4EB676-4A91-4044-AB1B-07099C66FAC8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
