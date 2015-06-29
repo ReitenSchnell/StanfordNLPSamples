@@ -45,5 +45,14 @@ namespace Tests
             var result = new MailParser().Parse(text, date);
             result.Place.Should().Be("Glazgo");
         }
+
+        [Fact]
+        public void should_recognize_Savoy_as_place()
+        {
+            const string text = "Organize a coffee meeting in Savoy for us next month.";
+            var date = new DateTime(2015, 1, 1);
+            var result = new MailParser().Parse(text, date);
+            result.Place.Should().Be("Savoy");
+        }
     }
 }

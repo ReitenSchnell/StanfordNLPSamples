@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using edu.stanford.nlp.ling;
 using edu.stanford.nlp.pipeline;
+using edu.stanford.nlp.util;
 using java.io;
 using java.util;
 using Console = System.Console;
+using System.Linq;
 
 namespace MailParsing
 {
@@ -21,7 +25,14 @@ namespace MailParsing
 
         public string ParsePlace()
         {
-            return string.Empty;
+            var sentences = annotation.Value.get(new CoreAnnotations.SentencesAnnotation().getClass()) as ArrayList;
+            if (sentences == null || sentences.isEmpty())
+                return string.Empty;
+            var places = (from CoreMap sentence in sentences 
+                          from CoreLabel token in sentence.get(new CoreAnnotations.TokensAnnotation().getClass()) as ArrayList 
+                          let namedEntity = token.get(new CoreAnnotations.NamedEntityTagAnnotation().getClass()) 
+                          where namedEntity.ToString() == "LOCATION" select token.originalText()).ToList();
+            return places.Any() ? places[0] : string.Empty;
         }
 
         public string ParseType()
@@ -51,14 +62,6 @@ namespace MailParsing
             var pipeline = new StanfordCoreNLP(props);
             var annotatedText = new Annotation(text);
             pipeline.annotate(annotatedText);
-
-            using (var stream = new ByteArrayOutputStream())
-            {
-                pipeline.prettyPrint(annotatedText, new PrintWriter(stream));
-                Console.WriteLine(stream.toString());
-                stream.close();
-            }
-
             return annotatedText;
         }
     }
