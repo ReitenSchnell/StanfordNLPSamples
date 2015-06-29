@@ -177,9 +177,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GeneralParser.cs" />
     <Compile Include="MailParser.cs" />
     <Compile Include="ParseResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="DateTimeParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
