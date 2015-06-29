@@ -14,7 +14,7 @@ namespace Tests
             var date = new DateTime(2015, 1, 1);
             var result = new MailParser().Parse(text, date);
             result.DateAndTime.Literal.Should().Be("next month");
-            Console.Out.WriteLine(result.DateAndTime.Expression);
+            result.DateAndTime.Expression.Should().Be("2015-02");
         }
 
         [Fact]
@@ -24,7 +24,7 @@ namespace Tests
             var date = new DateTime(2015, 1, 1);
             var result = new MailParser().Parse(text, date);
             result.DateAndTime.Literal.Should().Be("tomorrow");
-            Console.Out.WriteLine(result.DateAndTime.Expression);
+            result.DateAndTime.Expression.Should().Be("2015-01-02");
         }
 
         [Fact]
