@@ -15,43 +15,32 @@ namespace MailParsing
     {
         private const string modelsDir = @"C:\Data\Docs\NLP\stanford-corenlp-3.5.2-models\edu\stanford\nlp\models\";
         
-        public ParseResult Parse(string text)
+        public ParseResult Parse(string text, DateTime currentDate)
         {
-            ParseTimePipeline(text);
 //            ParseWholePipeline(text);
-            return new ParseResult();
+            return new ParseResult
+                {
+                    DateAndTime = ParseTimePipeline(text, currentDate)
+                };
         }
 
-        private static void ParseTimePipeline(string text)
+        private static DateInfo ParseTimePipeline(string text, DateTime date)
         {
-            var pipeline = new AnnotationPipeline();
-            pipeline.addAnnotator(new TokenizerAnnotator(false));
-            pipeline.addAnnotator(new WordsToSentencesAnnotator(false));
-            var tagger = new MaxentTagger(modelsDir + @"pos-tagger\english-bidirectional\english-bidirectional-distsim.tagger");
-            pipeline.addAnnotator(new POSTaggerAnnotator(tagger));
-            const string sutimeRules = modelsDir + @"\sutime\defs.sutime.txt,"
-                                       + modelsDir + @"\sutime\english.holidays.sutime.txt,"
-                                       + modelsDir + @"\sutime\english.sutime.txt";
-            var props = new Properties();
-            props.setProperty("sutime.rules", sutimeRules);
-            props.setProperty("sutime.binders", "0");
-            pipeline.addAnnotator(new TimeAnnotator("sutime", props));
-
+            var pipeline = SetupTimePipline();
             var annotation = new Annotation(text);
-            annotation.set(new CoreAnnotations.DocDateAnnotation().getClass(), "2013-07-14");
+            annotation.set(new CoreAnnotations.DocDateAnnotation().getClass(), date.ToString("yyyy-MM-dd"));
             pipeline.annotate(annotation);
-
-            Console.WriteLine("{0}\n", annotation.get(new CoreAnnotations.TextAnnotation().getClass()));
-
-            var timexAnnsAll = annotation.get(new TimeAnnotations.TimexAnnotations().getClass()) as ArrayList;
-            foreach (CoreMap cm in timexAnnsAll)
-            {
-                var tokens = cm.get(new CoreAnnotations.TokensAnnotation().getClass()) as List;
-                var first = tokens.get(0);
-                var last = tokens.get(tokens.size() - 1);
-                var time = cm.get(new TimeExpression.Annotation().getClass()) as TimeExpression;
-                Console.WriteLine("{0} [from char offset {1} to {2}] --> {3}", cm, first, last, time.getTemporal());
-            }
+           
+            var timeAnnotations = annotation.get(new TimeAnnotations.TimexAnnotations().getClass()) as ArrayList;
+            if (timeAnnotations == null || timeAnnotations.isEmpty())
+                return new DateInfo();
+            var cm = (CoreMap)timeAnnotations.get(0);
+            var timeExpression = cm.get(new TimeExpression.Annotation().getClass()) as TimeExpression;
+            return new DateInfo
+                {
+                    Literal = cm.ToString(),
+                    Expression = timeExpression.getTemporal().ToString()
+                };
         }
 
         private static void ParseWholePipeline(string text)
@@ -66,6 +55,23 @@ namespace MailParsing
                 Console.WriteLine(stream.toString());
                 stream.close();
             }
+        }
+
+        private static AnnotationPipeline SetupTimePipline()
+        {
+            var pipeline = new AnnotationPipeline();
+            pipeline.addAnnotator(new TokenizerAnnotator(false));
+            pipeline.addAnnotator(new WordsToSentencesAnnotator(false));
+            var tagger = new MaxentTagger(modelsDir + @"pos-tagger\english-bidirectional\english-bidirectional-distsim.tagger");
+            pipeline.addAnnotator(new POSTaggerAnnotator(tagger));
+            const string sutimeRules = modelsDir + @"\sutime\defs.sutime.txt,"
+                                       + modelsDir + @"\sutime\english.holidays.sutime.txt,"
+                                       + modelsDir + @"\sutime\english.sutime.txt";
+            var props = new Properties();
+            props.setProperty("sutime.rules", sutimeRules);
+            props.setProperty("sutime.binders", "0");
+            pipeline.addAnnotator(new TimeAnnotator("sutime", props));
+            return pipeline;
         }
 
         private static StanfordCoreNLP SetupGeneralPipeline()
