@@ -4,7 +4,7 @@ namespace MailParsing
 {
     public class MailParser
     {
-        private const string modelsDir = @"C:\Data\Docs\NLP\stanford-corenlp-3.5.2-models\edu\stanford\nlp\models\";
+        private const string modelsDir = @".\models\";
         
         public ParseResult Parse(string text, DateTime currentDate)
         {
